@@ -11,8 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class LoginController {
 
+    @RequestMapping("/")
+    public String home() {
+        return "This is home";
+    }
+
     @RequestMapping("/login")
     public void login(HttpServletResponse response, @RequestParam("username") String username) {
         response.addCookie(new Cookie("username", username));
     }
+
 }
