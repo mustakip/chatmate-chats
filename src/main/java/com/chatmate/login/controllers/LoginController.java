@@ -1,4 +1,4 @@
-package com.chatmate.chatmatechats.controllers;
+package com.chatmate.login.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
