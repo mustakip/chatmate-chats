@@ -1,5 +1,6 @@
 package com.chatmate.signup.controllers;
 
+import com.chatmate.signup.models.SignupResponseViewModel;
 import com.chatmate.signup.models.UserEntity;
 import com.chatmate.signup.services.SignupService;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class SignupControllerTest {
     @Test
     public void shouldReturnTrueIfUserSignupIsSucessful() throws Exception {
         final UserEntity userEntity = new UserEntity("username", "name", "password");
-        when(signupService.saveUser(userEntity)).thenReturn(true);
+        when(signupService.saveUser(userEntity)).thenReturn(new SignupResponseViewModel(true,null));
 
         final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(signupController).build();
 
@@ -39,14 +40,15 @@ public class SignupControllerTest {
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content("{\"username\": \"username\", \"name\": \"name\", \"password\": \"password\"}"))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().string("true"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.signupSuccessful").value("true"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").doesNotExist())
             .andReturn();
     }
 
     @Test
     public void shouldReturnfalseIfUserSignupIsUnSucessful() throws Exception {
         final UserEntity userEntity = new UserEntity("username", "name", "password");
-        when(signupService.saveUser(userEntity)).thenReturn(false);
+        when(signupService.saveUser(userEntity)).thenReturn(new SignupResponseViewModel(false,"Username already exists"));
 
         final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(signupController).build();
 
@@ -55,7 +57,8 @@ public class SignupControllerTest {
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content("{\"username\": \"username\", \"name\": \"name\", \"password\": \"password\"}"))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().string("false"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.signupSuccessful").value("false"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Username already exists"))
             .andReturn();
     }
 }

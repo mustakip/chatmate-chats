@@ -1,5 +1,6 @@
 package com.chatmate.signup.services;
 
+import com.chatmate.signup.models.SignupResponseViewModel;
 import com.chatmate.signup.models.UserEntity;
 import com.chatmate.signup.repositories.UserRepository;
 import org.junit.Test;
@@ -28,10 +29,11 @@ public class SignupServiceTest {
         final UserEntity userEntity = new UserEntity("username", "name", "password");
 
         when(userRepository.findById(userEntity.getUsername())).thenReturn(Optional.empty());
-        final boolean savedSucessfully = signupService.saveUser(userEntity);
+        final SignupResponseViewModel signupResponseViewModel = signupService.saveUser(userEntity);
 
         verify(userRepository).save(userEntity);
-        assertThat(savedSucessfully).isTrue();
+        assertThat(signupResponseViewModel.isSignupSuccessful()).isTrue();
+        assertThat(signupResponseViewModel.getError()).isNull();
     }
 
     @Test
@@ -41,9 +43,10 @@ public class SignupServiceTest {
         final UserEntity userEntityTryingToSave = new UserEntity("username", "name2", "password2");
 
         when(userRepository.findById(userEntityTryingToSave.getUsername())).thenReturn(Optional.of(userEntityAlreadyPresent));
-        boolean savedSucessfully = signupService.saveUser(userEntityTryingToSave);
+        final SignupResponseViewModel signupResponseViewModel = signupService.saveUser(userEntityTryingToSave);
 
         verify(userRepository, times(0)).save(userEntityTryingToSave);
-        assertThat(savedSucessfully).isFalse();
+        assertThat(signupResponseViewModel.isSignupSuccessful()).isFalse();
+        assertThat(signupResponseViewModel.getError()).isEqualTo("Username already exists");
     }
 }

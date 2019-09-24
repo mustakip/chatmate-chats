@@ -1,5 +1,6 @@
 package com.chatmate.signup.services;
 
+import com.chatmate.signup.models.SignupResponseViewModel;
 import com.chatmate.signup.models.UserEntity;
 import com.chatmate.signup.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,12 @@ public class SignupService {
 
     private UserRepository userRepository;
 
-    public boolean saveUser(UserEntity userEntity) {
+    public SignupResponseViewModel saveUser(UserEntity userEntity) {
         final Optional<UserEntity> optionalUserEntity = userRepository.findById(userEntity.getUsername());
         if (optionalUserEntity.isPresent()) {
-            return false;
+            return new SignupResponseViewModel(false,"Username already exists");
         }
         userRepository.save(userEntity);
-        return true;
+        return new SignupResponseViewModel(true,null);
     }
 }
