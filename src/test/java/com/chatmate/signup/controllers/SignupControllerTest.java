@@ -1,5 +1,6 @@
 package com.chatmate.signup.controllers;
 
+import com.chatmate.signup.models.SignupForm;
 import com.chatmate.signup.models.SignupResponseViewModel;
 import com.chatmate.signup.models.UserEntity;
 import com.chatmate.signup.services.SignupService;
@@ -31,7 +32,8 @@ public class SignupControllerTest {
     @Test
     public void shouldReturnTrueIfUserSignupIsSucessful() throws Exception {
         final UserEntity userEntity = new UserEntity("username", "name", "password");
-        when(signupService.saveUser(userEntity)).thenReturn(new SignupResponseViewModel(true,null));
+        final SignupForm signupForm = new SignupForm("username", "name", "password");
+        when(signupService.signup(signupForm)).thenReturn(new SignupResponseViewModel(true, null));
 
         final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(signupController).build();
 
@@ -48,7 +50,9 @@ public class SignupControllerTest {
     @Test
     public void shouldReturnfalseIfUserSignupIsUnSucessful() throws Exception {
         final UserEntity userEntity = new UserEntity("username", "name", "password");
-        when(signupService.saveUser(userEntity)).thenReturn(new SignupResponseViewModel(false,"Username already exists"));
+        final SignupForm signupForm = new SignupForm("username", "name", "password");
+
+        when(signupService.signup(signupForm)).thenReturn(new SignupResponseViewModel(false, "Username already exists"));
 
         final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(signupController).build();
 
