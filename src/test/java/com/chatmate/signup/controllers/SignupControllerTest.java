@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SignupControllerTest {
 
-    private MockMvc mockMvc;
 
     @InjectMocks
     private SignupController signupController;
@@ -31,7 +30,6 @@ public class SignupControllerTest {
 
     @Test
     public void shouldReturnTrueIfUserSignupIsSucessful() throws Exception {
-        final UserEntity userEntity = new UserEntity("username", "name", "password");
         final SignupForm signupForm = new SignupForm("username", "name", "password");
         when(signupService.signup(signupForm)).thenReturn(new SignupResponseViewModel(true, null));
 
