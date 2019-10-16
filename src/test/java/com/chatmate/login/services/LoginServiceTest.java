@@ -24,9 +24,6 @@ public class LoginServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private HttpServletResponse response;
-
     @InjectMocks
     private LoginService loginService;
 
@@ -40,7 +37,6 @@ public class LoginServiceTest {
         final LoginResponseViewModel loginResponseViewModel = loginService.login(loginForm);
 
         assertThat(loginResponseViewModel.isLoginSuccessful()).isTrue();
-        verify(response).addCookie(any());
         verify(userRepository).findById(loginForm.getUsername());
 
     }
@@ -53,7 +49,6 @@ public class LoginServiceTest {
         final LoginResponseViewModel loginResponseViewModel = loginService.login(loginForm);
 
         assertThat(loginResponseViewModel.isLoginSuccessful()).isFalse();
-        verify(response, times(0)).addCookie(any());
         verify(userRepository).findById(loginForm.getUsername());
 
     }
